@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "pink", "id": 0, "label": "0", "shape": "dot", "title": "In former times, a rich man and his wife were the parents of a beautiful little daughter; but before she had arrived at womanhood, her dear mother fell sick, and seeing that death was near, she called her little child to her, and thus addressed her: \"My child, always be good, and bear everything that occurs to you with patience; then, whatever toil and troubles you may suffer during life, happiness will be your lot in the end.\""}, {"color": "pink", "id": 1, "label": "1", "shape": "dot", "title": "After uttering these words the poor lady died, and her daughter was overwhelmed with grief at the loss of so good and kind a mother."}, {"color": "pink", "id": 2, "label": "2", "shape": "dot", "title": "The father, too, was very unhappy; but he sought to get rid of his sorrow by marrying another wife; and he looked for some amiable lady who might be a second mother to his child, and a companion to himself."}, {"color": "pink", "id": 3, "label": "3", "shape": "dot", "title": "Unfortunately, his choice fell on a widow lady, of a proud and overbearing temper, who had two daughters by a former marriage, both as haughty and bad-tempered as herself."}, {"color": "pink", "id": 4, "label": "4", "shape": "dot", "title": "Before marriage this woman had the cunning to conceal her bad qualities so well that she appeared to be very amiable; but the marriage was scarcely over when her real character showed itself."}, {"color": "pink", "id": 5, "label": "5", "shape": "dot", "title": "She could not endure her amiable step-daughter, with all her charming qualifications; for they only made her own daughters appear more hateful."}, {"color": "pink", "id": 6, "label": "6", "shape": "dot", "title": "She gave her the most degrading occupations, and compelled her to wash the dishes and clean the stairs, and to sweep her own rooms and those of her sisters-in-law."}, {"color": "pink", "id": 7, "label": "7", "shape": "dot", "title": "When the poor girl had finished her work, she used to sit in the chimney-corner amongst the cinders, which made her sisters give her the name of \"Cinderella.\""}, {"color": "pink", "id": 8, "label": "8", "shape": "dot", "title": "However, in her shabby clothes Cinderella was ten times handsomer than her sisters, let them be ever so magnificently dressed."}, {"color": "pink", "id": 9, "label": "9", "shape": "dot", "title": "The poor girl slept in the garret, upon a wretched straw mattress, whilst the bed-chambers of her sisters were furnished with every luxury and elegance, and provided with mirrors, in which they could survey themselves from head to foot."}, {"color": "pink", "id": 10, "label": "10", "shape": "dot", "title": "The amiable creature bore this ill treatment with patience, and did not venture to complain to her father, who was so completely governed by his wife that he would only have scolded her."}, {"color": "pink", "id": 11, "label": "11", "shape": "dot", "title": "It happened that the king\u0027s son sent invitations to a ball, which was to last two nights, and to which all the great people of the land were invited, the two sisters among the rest."}, {"color": "pink", "id": 12, "label": "12", "shape": "dot", "title": "This delighted them extremely, and their thoughts were entirely occupied in selecting their most becoming dresses for the important occasion."}, {"color": "pink", "id": 13, "label": "13", "shape": "dot", "title": "Poor Cinderella had now more work to do than ever, as it was her business to iron their linen, and starch their ruffles."}, {"color": "pink", "id": 14, "label": "14", "shape": "dot", "title": "The sisters talked of nothing but preparations for the ball."}, {"color": "pink", "id": 15, "label": "15", "shape": "dot", "title": "The eldest said, \"I shall wear my crimson-velvet dress, and point-lace;\" and the younger, \"I shall put on my usual dress-petticoat, a mantle embroidered with gold flowers, and a tiara of diamonds.\""}, {"color": "pink", "id": 16, "label": "16", "shape": "dot", "title": "They sent to engage the services of the most fashionable hairdresser."}, {"color": "pink", "id": 17, "label": "17", "shape": "dot", "title": "They also called Cinderella to their aid; for she had very good taste, and she offered, in the most amiable manner, to arrange their heads herself; of which offer they were only too happy to avail themselves."}, {"color": "pink", "id": 18, "label": "18", "shape": "dot", "title": "Whilst so occupied, the eldest said, \"Cinderella, should you like to go to the ball?\""}, {"color": "pink", "id": 19, "label": "19", "shape": "dot", "title": "\"Alas!\""}, {"color": "pink", "id": 20, "label": "20", "shape": "dot", "title": "said she, \"you are ridiculing me."}, {"color": "pink", "id": 21, "label": "21", "shape": "dot", "title": "I am not likely to go to the ball.\""}, {"color": "pink", "id": 22, "label": "22", "shape": "dot", "title": "\"You are right,\" replied the sister; \"people would be amused to see a Cinderella there.\""}, {"color": "pink", "id": 23, "label": "23", "shape": "dot", "title": "If Cinderella had been at all unamiable she might have dressed their heads all awry, for such unkindness; but she returned good for evil, and did it in the best possible style."}, {"color": "pink", "id": 24, "label": "24", "shape": "dot", "title": "The sisters were in such spirits they could scarcely eat for two days."}, {"color": "pink", "id": 25, "label": "25", "shape": "dot", "title": "All their time was spent before the looking-glass, and more than a dozen laces were broken in attempts to tighten their waists into elegant shapes."}, {"color": "pink", "id": 26, "label": "26", "shape": "dot", "title": "At length the long-wished-for evening arrived, and these proud misses stepped into their carriage, and drove away to the palace."}, {"color": "pink", "id": 27, "label": "27", "shape": "dot", "title": "Cinderella looked after the coach as far as she could see, and then returned to the kitchen in tears, where, for the first time, she bewailed her hard and cruel lot, little dreaming that a kind fairy was at the same moment watching over her."}, {"color": "pink", "id": 28, "label": "28", "shape": "dot", "title": "She continued sobbing in the chimney-corner until a rap at the door aroused her, and she got up to see what had caused it."}, {"color": "pink", "id": 29, "label": "29", "shape": "dot", "title": "She found a little old woman, hobbling on crutches, who besought her to give her some food."}, {"color": "pink", "id": 30, "label": "30", "shape": "dot", "title": "\"I have only part of my own supper for you, Goody, which is no better than a dry crust."}, {"color": "pink", "id": 31, "label": "31", "shape": "dot", "title": "But if you will step in and warm yourself by the fire, you can do so, and welcome.\""}, {"color": "pink", "id": 32, "label": "32", "shape": "dot", "title": "\"Thank you, my dear,\" said the old woman, in a feeble, croaking voice; and when she had hobbled in, and taken her seat by the fire, she continued, \"Hey!"}, {"color": "pink", "id": 33, "label": "33", "shape": "dot", "title": "dearee me!"}, {"color": "pink", "id": 34, "label": "34", "shape": "dot", "title": "what are all these tears about, my child?\""}, {"color": "pink", "id": 35, "label": "35", "shape": "dot", "title": "And then Cinderella told her of all her griefs,--how her sisters had gone to the ball, and how she should like to have gone also."}, {"color": "pink", "id": 36, "label": "36", "shape": "dot", "title": "\"But you shall go,\" exclaimed her visitor, who was suddenly transformed into a beautiful fairy, \"or I am not queen of the fairies, or your godmother."}, {"color": "pink", "id": 37, "label": "37", "shape": "dot", "title": "Dry up your tears, my dear goddaughter, and do as I bid you, and you shall have clothes and horses finer than any one.\""}, {"color": "pink", "id": 38, "label": "38", "shape": "dot", "title": "As Cinderella had often heard her father talk of her godmother, and tell her that she was one of those kind fairies who protect good children, her spirits revived, and she wiped away her tears."}, {"color": "pink", "id": 39, "label": "39", "shape": "dot", "title": "The fairy took Cinderella by the hand, and said, \"Now, my dear, go into the garden, and fetch me a pumpkin.\""}, {"color": "pink", "id": 40, "label": "40", "shape": "dot", "title": "Cinderella went immediately to gather the best she could find, and carried it to her godmother, though she could not guess how this pumpkin could make her go to the ball."}, {"color": "pink", "id": 41, "label": "41", "shape": "dot", "title": "Her godmother took the pumpkin and hollowed it out, leaving only the rind; she then struck it with her wand, and the pumpkin was immediately changed into a beautiful gilt coach."}, {"color": "pink", "id": 42, "label": "42", "shape": "dot", "title": "She next sent Cinderella for the mouse-trap, wherein were found six mice alive."}, {"color": "pink", "id": 43, "label": "43", "shape": "dot", "title": "She directed Cinderella to raise the door of the trap, and as each mouse came out she struck it with her wand, and it was immediately changed into a beautiful horse; so that she had now six splendid grays for her gilt coach."}, {"color": "pink", "id": 44, "label": "44", "shape": "dot", "title": "The fairy was perplexed how to find a coachman, but Cinderella said, \"I will go and see if there is a rat in the rat-trap; if there is, he will make a capital coachman.\""}, {"color": "pink", "id": 45, "label": "45", "shape": "dot", "title": "\"You are right,\" said the godmother; \"go and see.\""}, {"color": "pink", "id": 46, "label": "46", "shape": "dot", "title": "Cinderella brought the rat-trap, in which there were three large rats."}, {"color": "pink", "id": 47, "label": "47", "shape": "dot", "title": "The fairy selected one, on account of its beautiful whiskers, and, having touched it, it was changed into a fat coachman, with the finest pair of whiskers that ever were seen."}, {"color": "pink", "id": 48, "label": "48", "shape": "dot", "title": "She then said, \"You must now go into the garden, where you will find six lizards, behind the watering-pot; bring them to me.\""}, {"color": "pink", "id": 49, "label": "49", "shape": "dot", "title": "These were no sooner brought than the godmother changed them into six tall footmen, in handsome liveries, with cocked hats and gold-headed canes, who jumped up behind the coach just as if they had been accustomed to it all their lives."}, {"color": "pink", "id": 50, "label": "50", "shape": "dot", "title": "The coachman and postilion having likewise taken their places, the fairy said to Cinderella, \"Well, my dear girl, is not this as fine an equipage as you could desire, to go to the ball with?"}, {"color": "pink", "id": 51, "label": "51", "shape": "dot", "title": "Tell me, now, are you pleased with it?\""}, {"color": "pink", "id": 52, "label": "52", "shape": "dot", "title": "\"O yes, dear godmother,\" replied Cinderella; and then, with a good deal of hesitation, she added, \"but how can I make my appearance among so many finely-dressed people in these shabby clothes?\""}, {"color": "pink", "id": 53, "label": "53", "shape": "dot", "title": "\"Give yourself no uneasiness about that, my dear."}, {"color": "pink", "id": 54, "label": "54", "shape": "dot", "title": "The most difficult part of our task is already accomplished, and it will be hard if I cannot make your dress correspond with your coach and servants.\""}, {"color": "pink", "id": 55, "label": "55", "shape": "dot", "title": "On saying this, the fairy touched Cinderella with her magic wand, and her clothes were instantly changed into a most magnificent ball-dress, ornamented with the most costly jewels."}, {"color": "pink", "id": 56, "label": "56", "shape": "dot", "title": "The fairy now took from her pocket a beautiful pair of elastic glass slippers, which she caused Cinderella to put on; and when she had thus completed her work, and Cinderella stood before her, arrayed in her beautiful clothes, the fairy was much pleased, and desired her to get into the carriage with all expedition, as the ball had already commenced."}, {"color": "pink", "id": 57, "label": "57", "shape": "dot", "title": "Two of the footmen then sprang and opened the carriage-door, and assisted Cinderella into it."}, {"color": "pink", "id": 58, "label": "58", "shape": "dot", "title": "Her godmother, however, before she took leave, strictly charged her on no account whatever to stay at the ball after the clock had struck the hour of midnight; and then added that if she stopped but a single moment beyond that time her fine coach would again become a gourd, her horses mice, her footmen lizards, and her old clothes resume their former appearance."}, {"color": "pink", "id": 59, "label": "59", "shape": "dot", "title": "Cinderella promised faithfully to attend to everything that the fairy had mentioned; and then, quite overjoyed, gave the direction to the footman, who bawled out, in a loud voice, to the coachman, \"To the royal palace!\""}, {"color": "pink", "id": 60, "label": "60", "shape": "dot", "title": "The coachman touched his prancing horses lightly with his whip, and swiftly the carriage started off, and in a short time reached the palace."}, {"color": "pink", "id": 61, "label": "61", "shape": "dot", "title": "The arrival of so splendid an equipage as Cinderella\u0027s could not fail to attract general notice at the palace gates, and as it drove up to the marble portico the servants, in great numbers, came out to see it."}, {"color": "pink", "id": 62, "label": "62", "shape": "dot", "title": "The king\u0027s son, to whom it was announced that an unknown princess had arrived, hastened to receive her."}, {"color": "pink", "id": 63, "label": "63", "shape": "dot", "title": "He handed her out of the carriage, and led her to the ball-room."}, {"color": "pink", "id": 64, "label": "64", "shape": "dot", "title": "Immediately she entered the dancing ceased, and the violins stopped playing; so much was every one struck with the extreme beauty of the unknown princess; and the only sound heard was that of admiration."}, {"color": "pink", "id": 65, "label": "65", "shape": "dot", "title": "The king, old as he was, could not take his eyes off her, and said, in a low voice to the queen, that he had not seen such a beautiful person for many years."}, {"color": "pink", "id": 66, "label": "66", "shape": "dot", "title": "All the ladies began examining her dress, that they might have similar ones the next evening, if it was possible to obtain equally rich stuffs, and work-people skilled enough to make them."}, {"color": "pink", "id": 67, "label": "67", "shape": "dot", "title": "The king\u0027s son conducted her to the most distinguished place, and invited her to dance."}, {"color": "pink", "id": 68, "label": "68", "shape": "dot", "title": "She danced with such grace that everybody was in raptures with her; and when supper was served the prince could partake of nothing, so much was he occupied in contemplating the beauty of the fair stranger."}, {"color": "pink", "id": 69, "label": "69", "shape": "dot", "title": "Seated close to her sisters, Cinderella showed them marked attention, and divided with them the oranges and citrons which the prince had given her; all of which surprised them greatly, as they did not recognize her."}, {"color": "pink", "id": 70, "label": "70", "shape": "dot", "title": "When Cinderella saw that it wanted but a quarter of an hour of midnight she left as quickly as possible, making a low courtesy to all the company."}, {"color": "pink", "id": 71, "label": "71", "shape": "dot", "title": "On reaching home she found her godmother there, thanked her for the delightful evening she had spent, and begged permission to go to the ball the following night, as the prince had desired her company."}, {"color": "pink", "id": 72, "label": "72", "shape": "dot", "title": "The fairy kindly granted her request, on condition that she would return before twelve."}, {"color": "pink", "id": 73, "label": "73", "shape": "dot", "title": "She then caused her clothes to resume their usual plainness, that her sisters might not know of her adventure."}, {"color": "pink", "id": 74, "label": "74", "shape": "dot", "title": "Whilst Cinderella was occupied in relating all that had passed at the ball to her godmother, the two sisters knocked at the door, and as she went to open it for them the fairy disappeared."}, {"color": "pink", "id": 75, "label": "75", "shape": "dot", "title": "\"O, how late you are in coming home,\" said Cinderella, rubbing her eyes, as if just awakened."}, {"color": "pink", "id": 76, "label": "76", "shape": "dot", "title": "\"If you had been at the ball,\" said one of the sisters, \"you would not have been tired; for there was there the most beautiful princess that ever was seen, who paid us much attention, and gave us oranges and citrons.\""}, {"color": "pink", "id": 77, "label": "77", "shape": "dot", "title": "Cinderella could scarcely contain herself for joy."}, {"color": "pink", "id": 78, "label": "78", "shape": "dot", "title": "She asked the name of the princess, but they said it was not known, and that the king\u0027s son was therefore much distressed, and would give anything he had to know who she could be."}, {"color": "pink", "id": 79, "label": "79", "shape": "dot", "title": "Cinderella smiled, and said, \"Was she, then, so very beautiful?"}, {"color": "pink", "id": 80, "label": "80", "shape": "dot", "title": "Could not I see her?"}, {"color": "pink", "id": 81, "label": "81", "shape": "dot", "title": "O, Javotte, do lend me your yellow dress, that you wear every day, that I may go to the ball, and have a peep at this wonderful princess!\""}, {"color": "pink", "id": 82, "label": "82", "shape": "dot", "title": "\"Indeed,\" said Javotte, \"I am not so silly as to lend my dress to a wretched Cinderella like you.\""}, {"color": "pink", "id": 83, "label": "83", "shape": "dot", "title": "Cinderella expected this refusal, and was very glad of it; for she would have been greatly embarrassed if her sister had lent her the dress."}, {"color": "pink", "id": 84, "label": "84", "shape": "dot", "title": "The next evening the sisters again went to the ball, and Cinderella soon made her appearance, more magnificently dressed than before."}, {"color": "pink", "id": 85, "label": "85", "shape": "dot", "title": "The king\u0027s son was constantly at her side, saying the most agreeable things; so that Cinderella did not notice how the time passed, and had quite forgot her godmother\u0027s injunctions."}, {"color": "pink", "id": 86, "label": "86", "shape": "dot", "title": "While she therefore thought it was scarcely eleven o\u0027clock, she was startled by the first stroke of midnight."}, {"color": "pink", "id": 87, "label": "87", "shape": "dot", "title": "She rose very hastily, and fled as lightly as a fawn, the prince following, though he could not overtake her."}, {"color": "pink", "id": 88, "label": "88", "shape": "dot", "title": "In her flight she let one of her glass slippers fall, which the prince picked up with the greatest care."}, {"color": "pink", "id": 89, "label": "89", "shape": "dot", "title": "Cinderella arrived at home out of breath, without carriage or servants, in her shabby clothes, and had nothing remaining of all her former magnificence except one of her little glass slippers,--the fellow of that she had lost."}, {"color": "pink", "id": 90, "label": "90", "shape": "dot", "title": "Upon inquiry being made of the guards, at the palace gates, as to whether the princess had gone out, they replied that they had seen no one go out but a young girl, very poorly dressed, who looked more like a peasant than a fine lady."}, {"color": "pink", "id": 91, "label": "91", "shape": "dot", "title": "When the two sisters returned from the ball Cinderella asked if they had enjoyed themselves, and if the beautiful lady had again been there."}, {"color": "pink", "id": 92, "label": "92", "shape": "dot", "title": "They told her that she had been there, but that when the clock struck twelve she had started off so quickly that she let one of her pretty glass slippers fall off; that the prince, who quickly followed her, had picked it up, and had done nothing but look at it all the rest of the evening; and that he was evidently very much in love with the beautiful creature to whom it belonged, and would spare no pains to find her."}, {"color": "pink", "id": 93, "label": "93", "shape": "dot", "title": "This was indeed the case; for, a few days after, the prince caused it to be published, with the sound of trumpets, that he would marry the lady whose foot would exactly fit the slipper."}, {"color": "pink", "id": 94, "label": "94", "shape": "dot", "title": "So the slipper was first tried on by all the princesses, then by all the duchesses, and next by all the ladies belonging to the court; but in vain."}, {"color": "pink", "id": 95, "label": "95", "shape": "dot", "title": "It was then taken to the two sisters, who tried every possible way of getting their foot into it, but without success."}, {"color": "pink", "id": 96, "label": "96", "shape": "dot", "title": "Cinderella, who was looking at them, and now recognized her slipper, said, laughingly, \"Let me see if it will fit me.\""}, {"color": "pink", "id": 97, "label": "97", "shape": "dot", "title": "The sisters immediately began to laugh, and to ridicule her; but the gentleman who had been appointed to try on the slipper, having looked attentively at Cinderella, and finding her very pretty, said she was quite right in her request; for he was ordered to try it on to everybody."}, {"color": "pink", "id": 98, "label": "98", "shape": "dot", "title": "He desired her to sit down, and at once found that the slipper would go on her foot, without any trouble, and, indeed, fitted her like wax."}, {"color": "pink", "id": 99, "label": "99", "shape": "dot", "title": "The astonishment of the sisters was very great, but still greater when Cinderella drew from her pocket the fellow-slipper, and, to the great delight of the gentleman, placed it upon her other foot."}, {"color": "pink", "id": 100, "label": "100", "shape": "dot", "title": "Her godmother now made her appearance, and, having touched Cinderella with her wand, she made her look even more magnificent than on either of the former occasions."}, {"color": "pink", "id": 101, "label": "101", "shape": "dot", "title": "The sisters now recognized in Cinderella the beautiful person they had seen at the ball, and threw themselves at her feet, to implore forgiveness for all the ill-treatment they had shown her."}, {"color": "pink", "id": 102, "label": "102", "shape": "dot", "title": "Cinderella raised them up, and, embracing them, said she forgave them, with all her heart, their unkindness to her, and hoped that for the future they would be more kind in their behavior to every one about them."}, {"color": "pink", "id": 103, "label": "103", "shape": "dot", "title": "She told them she had never forgotten the last words of her mother, on her death-bed:--\"My child, always be good, and bear with patience everything that occurs to you; then, whatever toils and troubles you may suffer during life, happiness will be your lot in the end.\""}, {"color": "pink", "id": 104, "label": "104", "shape": "dot", "title": "These words now proved to be true; for, having borne unkindness and cruelty with patience ever since her father\u0027s second marriage, she was now going to be the wife of the king\u0027s son."}, {"color": "pink", "id": 105, "label": "105", "shape": "dot", "title": "Cinderella then explained the visit of her godmother, the queen of the fairies; and how her magic wand had furnished her with dresses, carriages, and attendants; and how, by forgetting the good fairy\u0027s orders, she was obliged to quit the ball-room so suddenly; and how, in her haste, she lost her little glass slipper, and, for her disobedience, was deprived of all her fine clothes."}, {"color": "pink", "id": 106, "label": "106", "shape": "dot", "title": "Cinderella being now betrothed to the prince, she was taken to the palace, dressed in all her splendor; and, being as amiable as she was beautiful, invited her sisters to live in the palace with her, where they were soon married to two great lords belonging to the court."}, {"color": "pink", "id": 107, "label": "107", "shape": "dot", "title": "The prince thought Cinderella more beautiful than ever, and in a few days married her."}, {"color": "pink", "id": 108, "label": "108", "shape": "dot", "title": "She was most happy in the love of her husband, the esteem of the court, and the good-will of all who knew her."}, {"color": "green", "id": 109, "label": "109", "shape": "dot", "title": "Oh, do, my Lady Javotte, lend me the yellow dress you wear every day, that I may go to the ball and have a peep at this wonderful princess.\""}, {"color": "green", "id": 110, "label": "110", "shape": "dot", "title": "\"A likely story, indeed!\""}, {"color": "green", "id": 111, "label": "111", "shape": "dot", "title": "cried Javotte, tossing her head disdainfully, \"that I should lend my clothes to a dirty Cinderella like you!\""}, {"color": "green", "id": 112, "label": "112", "shape": "dot", "title": "Cinderella expected to be refused, and was not sorry for it, as she would have been puzzled what to do, had her sister really lent her the dress she begged to have."}, {"color": "green", "id": 113, "label": "113", "shape": "dot", "title": "On the following evening the sisters again went to the court ball, and so did Cinderella, dressed even more magnificently than before."}, {"color": "green", "id": 114, "label": "114", "shape": "dot", "title": "The king\u0027s son never left her side, and kept paying her the most flattering attentions."}, {"color": "green", "id": 115, "label": "115", "shape": "dot", "title": "The young lady was nothing loth to listen to him; so it came to pass that she forgot her godmother\u0027s injunctions, and, indeed, lost her reckoning so completely, that before she deemed it could be eleven o\u0027clock, she was startled at hearing the first stroke of midnight."}, {"color": "green", "id": 116, "label": "116", "shape": "dot", "title": "She rose hastily, and flew away like a startled fawn."}, {"color": "green", "id": 117, "label": "117", "shape": "dot", "title": "The prince attempted to follow her, but she was too swift for him; only, as she flew she dropped one of her glass slippers, which he picked up very eagerly."}, {"color": "green", "id": 118, "label": "118", "shape": "dot", "title": "Cinderella reached home quite out of breath, without either coach or footmen, and with only her shabby clothes on her back; nothing, in short, remained of her recent magnificence, save a little glass slipper, the fellow to the one she had lost."}, {"color": "green", "id": 119, "label": "119", "shape": "dot", "title": "The sentinels at the palace gate were closely questioned as to whether they had not seen a princess coming out; but they answered they had seen no one except a shabbily dressed girl, who appeared to be a peasant rather than a young lady."}, {"color": "green", "id": 120, "label": "120", "shape": "dot", "title": "On this second night, as you have taken notice, dazzled by worldly show and the pleasing flattery of her royal lover, Cinderella over-stays her time, and is compelled to make her way back to her father\u0027s house on foot and in rags--an everlasting lesson to all the pretty little Cinderellas in the world to keep their word, and to act in good faith by such as befriend them."}, {"color": "green", "id": 121, "label": "121", "shape": "dot", "title": "Never mind--her heart is in the right place--she is a charming good creature; and although virtue goes home in rags, it will leave some token behind--some foot-print by which it can be known and traced wherever it has once walked."}, {"color": "green", "id": 122, "label": "122", "shape": "dot", "title": "We shall hear from that little lost glass slipper again!"}, {"color": "green", "id": 123, "label": "123", "shape": "dot", "title": "When the two sisters returned from the ball, Cinderella asked them whether they had been well entertained; and whether the beautiful lady was there?"}, {"color": "green", "id": 124, "label": "124", "shape": "dot", "title": "They replied, that she was; but that she had run away as soon as midnight had struck, and so quickly as to drop one of her dainty glass slippers, which the king\u0027s son had picked up, and was looking at most fondly during the remainder of the ball; indeed, it seemed beyond a doubt that he was deeply enamored of the beautiful creature to whom it belonged."}, {"color": "green", "id": 125, "label": "125", "shape": "dot", "title": "They spoke truly enough; for, a few days afterwards, the king\u0027s son caused a proclamation to be made, by sound of trumpet all over the kingdom, to the effect that he would marry her whose foot should be found to fit the slipper exactly."}, {"color": "green", "id": 126, "label": "126", "shape": "dot", "title": "So the slipper was first tried on by all the princesses; then by all the duchesses; and next by all the persons belonging to the court; but in vain."}, {"color": "green", "id": 127, "label": "127", "shape": "dot", "title": "It was then carried to the two sisters, who tried with all their might to force their feet into its delicate proportions, but with no better success."}, {"color": "green", "id": 128, "label": "128", "shape": "dot", "title": "Cinderella, who was present, and recognized her slipper, now laughed, and said, \"Suppose I were to try?\""}, {"color": "green", "id": 129, "label": "129", "shape": "dot", "title": "Her sisters ridiculed such an idea; but the gentleman who was appointed to try the slipper, having looked attentively at Cinderella, and perceived how beautiful she was, said that it was but fair she should do so, as he had orders to try it on every young maiden in the kingdom."}, {"color": "green", "id": 130, "label": "130", "shape": "dot", "title": "Accordingly, having requested Cinderella to sit down, she no sooner put her little foot to the slipper, than she drew it on, and it fitted like wax."}, {"color": "green", "id": 131, "label": "131", "shape": "dot", "title": "The sisters were quite amazed; but their astonishment increased tenfold when Cinderella drew the fellow slipper out of her pocket, and put it on."}, {"color": "green", "id": 132, "label": "132", "shape": "dot", "title": "Her godmother then made her appearance; and, having touched Cinderella\u0027s clothes with her wand, made them still more magnificent than those she had previously worn."}, {"color": "green", "id": 133, "label": "133", "shape": "dot", "title": "Her two sisters now recognized her for the beautiful stranger they had seen at the ball; and, falling at her feet, implored her forgiveness for their unworthy treatment, and all the insults they had heaped upon her head."}, {"color": "green", "id": 134, "label": "134", "shape": "dot", "title": "Cinderella raised them, saying, as she embraced them, that she not only forgave them with all her heart, but wished for their affection."}, {"color": "green", "id": 135, "label": "135", "shape": "dot", "title": "She was then taken to the palace of the young prince, in whose eyes she appeared yet more lovely than before, and who married her shortly after."}, {"color": "green", "id": 136, "label": "136", "shape": "dot", "title": "Cinderella, who was as good as she was beautiful, allowed her sisters to lodge in the palace, and gave them in marriage, that same day, to two lords belonging to the court."}, {"color": "green", "id": 137, "label": "137", "shape": "dot", "title": "The amiable qualities of Cinderella were as conspicuous after as they had been before marriage."}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

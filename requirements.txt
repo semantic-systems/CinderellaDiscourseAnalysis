@@ -1,0 +1,5 @@
+frame-semantic-transformer
+gutenberg
+clean-text
+paddlenlp
+fastcoref
