@@ -1,7 +1,7 @@
 # CinderellaDiscourseAnalysis
 a prototype for discourse analysis on 500 versions of cinderella, and 497 more to go...
 ![and 497 to go...](cinderella.png)
-
+_download the .html file to interact with Cinderellas🧚🏻‍♀️_
 # Resources
 1. Gutenberg Project
 2. Narrative representation models
