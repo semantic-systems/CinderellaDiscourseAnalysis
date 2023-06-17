@@ -2,6 +2,12 @@
 a prototype for discourse analysis on 500 versions of cinderella, and 497 more to go...
 ![and 497 to go...](cinderella.png)
 _download the .html file to interact with Cinderellas🧚🏻‍♀️_
+
+Each node represents a sentence from different versions of Cinderella, temporally ordered. 
+Different versions are indicated by the color. Assuming there is something as a "core cinderella" 
+- a sequence of events that is perceived as the essence of a piece of narrative 
+- or, something invariance in the variances of the same story (seeing that as finding class properties with observations from instances)
+
 # Resources
 1. Gutenberg Project
 2. Narrative representation models
