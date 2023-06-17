@@ -4,9 +4,13 @@ a prototype for discourse analysis on 500 versions of cinderella, and 497 more t
 _download the .html file to interact with Cinderellas🧚🏻‍♀️_
 
 Each node represents a sentence from different versions of Cinderella, temporally ordered. 
-Different versions are indicated by the color. Assuming there is something as a "core cinderella" 
+Different versions are indicated by the color. Edges represent similarities between each sentences across versions.
+
+This representation aims to discover how stories of Cinderella are told differently.  
+
+We assume that there is something as a "core cinderella", which is represented as 
 - a sequence of events that is perceived as the essence of a piece of narrative 
-- or, something invariance in the variances of the same story (seeing that as finding class properties with observations from instances)
+- or, the invariance in the variances of the same story (seeing that as finding class properties with observations from instances)
 
 # Resources
 1. Gutenberg Project
