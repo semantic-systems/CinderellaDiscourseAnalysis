@@ -1,5 +1,9 @@
-frame-semantic-transformer
-gutenberg
+spacy
 clean-text
-paddlenlp
+pyvis
+transformers
 fastcoref
+matplotlib
+nltk
+pip-chill
+unidecode

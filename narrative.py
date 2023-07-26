@@ -51,6 +51,7 @@ class Narrative(object):
         )
         return doc._.resolved_text
 
+
 class CinderellaNarrative(Narrative):
     def __init__(self, path: str):
         super().__init__()
@@ -74,3 +75,92 @@ class CinderellaNarrative(Narrative):
 
     def __str__(self):
         return self.segmented_text
+
+
+if __name__ == "__main__":
+    import re
+    import requests
+    # from gutenberg.cleanup import strip_headers
+    from gutenberg.query import get_metadata
+    # from gutenberg.acquire import get_metadata_cache
+    import gutenbergpy
+    from gutenbergpy.gutenbergcache import GutenbergCache, GutenbergCacheTypes
+
+
+    def get_gutenberg_cache():
+        cache = get_metadata_cache()
+        cache.populate()
+
+    def get_gutenbergpy_cache():
+        GutenbergCache.create(type=GutenbergCacheTypes.CACHE_TYPE_MONGODB)
+
+    def download_cinderella_stories():
+        get_gutenbergpy_cache()
+        # Get all EText IDs
+        cache = GutenbergCache.get_cache()
+        etext_ids = cache.query(titles=['Cinderella', "cinderella"])
+        print(etext_ids)
+        print(f"{len(etext_ids)} Cinderellas found.")
+        column_query = "PRAGMA table_info(books)"
+        columns = cache.native_query(column_query)
+        column_names = [column[1] for column in columns]
+        print(column_names)
+        print(cache.query(downloadtype=['application/plain', 'text/plain', 'text/html; charset=utf-8'],
+                          titles="cinderella"))
+
+        # Search for Cinderella-related books
+        cinderella_books = cache.native_query({"title":'Cinderella'})
+
+        print("cinderella_books", cinderella_books)
+
+        # Filter out non-Cinderella stories
+        cinderella_variants = []
+        for book in cinderella_books:
+            if 'Cinderella' in book.title:
+                cinderella_variants.append(book)
+
+        # Download the Cinderella stories
+        for book in cinderella_variants:
+            gutenbergpy.download(book.gutenberg_id, overwrite=False)
+
+        for etext_id in etext_ids:
+            # Fetch the metadata for the EText
+            metadata = get_metadata('title', etext_id)
+            title = metadata[0]['title']
+
+            # Fetch the text content of the EText
+            text = strip_headers(load_etext(etext_id)).strip()
+            subname = re.sub(r"\W+", "_", title)
+
+            # Check if the text contains "Cinderella" in the subject field
+            if 'Cinderella' in metadata[0].get('subject', ''):
+                # Save the Cinderella story as a text file
+                filename = f'{etext_id}_{subname}.txt'
+                with open(filename, 'w', encoding='utf-8') as file:
+                    file.write(text)
+
+    # Run the function to download Cinderella stories
+    # get_gutenbergpy_cache()
+    download_cinderella_stories()
+
+    #     # Get all EText IDs
+    #     etext_ids = get_etexts('title', value='Cinderella')
+    #
+    #     for etext_id in etext_ids:
+    #         # Fetch the metadata for the EText
+    #         metadata = get_metadata('title', etext_id)
+    #         title = metadata[0]['title']
+    #
+    #         # Check if the title contains "Cinderella"
+    #         if re.search(r'\bCinderella\b', title, re.IGNORECASE):
+    #             # Fetch the text content of the EText
+    #             text = strip_headers(load_etext(etext_id)).strip()
+    #             subname = re.sub(r"\W+", "_", title)
+    #             # Save the Cinderella story as a text file
+    #             filename = f'{etext_id}_{subname}.txt'
+    #             with open(f"./narratives/cinderella/{filename}", 'w', encoding='utf-8') as file:
+    #                 file.write(text)
+    #
+    #
+    # # Run the function to download Cinderella stories
+    # download_cinderella_stories()
